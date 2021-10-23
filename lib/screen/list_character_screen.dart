@@ -5,6 +5,7 @@ import 'package:harry_potter_app/components/loader_component.dart';
 import 'package:harry_potter_app/helpers/api_helper.dart';
 import 'package:harry_potter_app/models/character.dart';
 import 'package:harry_potter_app/models/response.dart';
+import 'package:harry_potter_app/screen/error_screen.dart';
 
 class ListCharacterScreen extends StatefulWidget {
   const ListCharacterScreen({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class ListCharacterScreen extends StatefulWidget {
 
 class _ListCharacterScreenState extends State<ListCharacterScreen> {
   bool _isLoading = false;
-  bool _connectivity = true;
   bool _isFiltered = false;
   List<character> _character = [];
   @override
@@ -29,7 +29,13 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Harry Potter characters'),
+        title: Text(
+          'Harry Potter characters',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.red[100],
       ),
       body: Center(
         child: _isLoading
@@ -47,6 +53,13 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
     setState(() {
       _isLoading = true;
     });
+    var cocnectcityResult = await Connectivity().checkConnectivity();
+
+    if (cocnectcityResult == ConnectivityResult.none) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => ErrorScreen()));
+      return;
+    }
     Responses responses = await ApiHelper.getCharacters();
 
     if (!responses.isSuccess) {
@@ -90,6 +103,7 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
       child: ListView(
         children: _character.map((e) {
           return Card(
+            color: Colors.yellow.shade200,
             child: InkWell(
               onTap: () => {},
               child: Container(
@@ -136,7 +150,11 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
                           ),
                         ],
                       ),
-                    ))
+                    )),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Icon(Icons.arrow_forward_ios)
                   ],
                 ),
               ),

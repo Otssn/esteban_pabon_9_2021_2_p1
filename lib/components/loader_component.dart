@@ -16,8 +16,7 @@ class loaderComponents extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network(
-                "https://media1.giphy.com/media/2zoIuUJvAa0TbSy1kT/200w.gif"),
+            Image.asset('assets/loader.gif'),
             Text(
               text,
               style: TextStyle(

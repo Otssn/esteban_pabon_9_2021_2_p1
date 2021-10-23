@@ -6,6 +6,7 @@ import 'package:harry_potter_app/helpers/api_helper.dart';
 import 'package:harry_potter_app/models/character.dart';
 import 'package:harry_potter_app/models/response.dart';
 import 'package:harry_potter_app/screen/error_screen.dart';
+import 'package:harry_potter_app/screen/wizars_screen.dart';
 
 class ListCharacterScreen extends StatefulWidget {
   const ListCharacterScreen({Key? key}) : super(key: key);
@@ -18,6 +19,8 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
   bool _isLoading = false;
   bool _isFiltered = false;
   List<character> _character = [];
+  String _search = "";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -35,6 +38,17 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
             color: Colors.black,
           ),
         ),
+        actions: <Widget>[
+          _isFiltered
+              ? IconButton(
+                  onPressed: removeFilter,
+                  icon: Icon(Icons.filter_none),
+                )
+              : IconButton(
+                  onPressed: _showFilter,
+                  icon: Icon(Icons.filter_alt),
+                ),
+        ],
         backgroundColor: Colors.red[100],
       ),
       body: Center(
@@ -105,7 +119,15 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
           return Card(
             color: Colors.yellow.shade200,
             child: InkWell(
-              onTap: () => {},
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WizardScreen(
+                            char: e,
+                          )),
+                );
+              },
               child: Container(
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.all(5),
@@ -163,5 +185,69 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
         }).toList(),
       ),
     );
+  }
+
+  void removeFilter() {
+    setState(() {
+      _isFiltered = false;
+    });
+    _getCharacter();
+  }
+
+  void _showFilter() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            title: Text('Filtrar nombre'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Escriba las primeras letras del nombre'),
+                SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: 'Criterio de busqueda',
+                    labelText: 'Buscar',
+                    suffixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _search = value;
+                    });
+                  },
+                )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancelar')),
+              TextButton(onPressed: () => _filter(), child: Text('Filtrar'))
+            ],
+          );
+        });
+  }
+
+  _filter() {
+    if (_search.isEmpty) {
+      return;
+    }
+    List<character> filterList = [];
+    for (var item in _character) {
+      if (item.name.toLowerCase().contains(_search.toLowerCase())) {
+        filterList.add(item);
+      }
+    }
+    setState(() {
+      _character = filterList;
+      _isFiltered = true;
+    });
+    Navigator.of(context).pop();
   }
 }

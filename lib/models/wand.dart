@@ -1,14 +1,14 @@
 class Wand {
   String wood = "";
   String core = "";
-  int length = "";
+  var length = "";
 
   Wand({required this.wood, required this.core, required this.length});
 
   Wand.fromJson(Map<String, dynamic> json) {
     wood = json['wood'];
     core = json['core'];
-    length = json['length'];
+    length = json['length'].toString();
   }
 
   Map<String, dynamic> toJson() {

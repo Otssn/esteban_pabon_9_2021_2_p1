@@ -9,14 +9,15 @@ class loaderComponents extends StatelessWidget {
     return Center(
       child: Container(
         width: 200,
-        height: 100,
+        height: 300,
         decoration: BoxDecoration(
-          color: Colors.black12,
+          color: Colors.red[100],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            Image.network(
+                "https://media1.giphy.com/media/2zoIuUJvAa0TbSy1kT/200w.gif"),
             Text(
               text,
               style: TextStyle(

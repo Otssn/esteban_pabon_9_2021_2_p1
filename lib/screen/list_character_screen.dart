@@ -20,6 +20,7 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
   bool _isFiltered = false;
   List<character> _character = [];
   String _search = "";
+  Color colorRgb = Color.fromRGBO(238, 186, 48, 1);
 
   @override
   void initState() {
@@ -49,7 +50,7 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
                   icon: Icon(Icons.filter_alt),
                 ),
         ],
-        backgroundColor: Colors.red[100],
+        backgroundColor: Color.fromRGBO(238, 186, 48, 1),
       ),
       body: Center(
         child: _isLoading
@@ -116,68 +117,87 @@ class _ListCharacterScreenState extends State<ListCharacterScreen> {
       onRefresh: _getCharacter,
       child: ListView(
         children: _character.map((e) {
-          return Card(
-            color: Colors.yellow.shade200,
-            child: InkWell(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => WizardScreen(
-                            char: e,
-                          )),
-                );
-              },
-              child: Container(
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(5),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: FadeInImage(
-                        placeholder: AssetImage('assets/logo.png'),
-                        image: NetworkImage(e.image),
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
+          switch (e.house.toLowerCase()) {
+            case "gryffindor":
+              colorRgb = Color.fromRGBO(174, 0, 1, 20);
+              break;
+            case "slytherin":
+              colorRgb = Color.fromRGBO(26, 71, 42, 1);
+              break;
+            case "ravenclaw":
+              colorRgb = Color.fromRGBO(34, 47, 91, 1);
+              break;
+            case "hufflepuff":
+              colorRgb = Color.fromRGBO(255, 237, 134, 1);
+              break;
+            default:
+              colorRgb = Color.fromRGBO(238, 186, 48, 1);
+          }
+          return Container(
+            child: Card(
+              color: colorRgb,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WizardScreen(
+                              char: e,
+                            )),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(5),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: FadeInImage(
+                          placeholder: AssetImage('assets/logo.png'),
+                          image: NetworkImage(e.image),
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                        child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                e.name,
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                e.species,
-                                style: TextStyle(
-                                  fontSize: 15,
+                      Expanded(
+                          child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  e.name,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              Text(
-                                e.patronus,
-                                style: TextStyle(
-                                  fontSize: 15,
+                                Text(
+                                  e.species,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Text(
+                                  e.patronus,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )),
+                      SizedBox(
+                        height: 5,
                       ),
-                    )),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Icon(Icons.arrow_forward_ios)
-                  ],
+                      Icon(Icons.arrow_forward_ios)
+                    ],
+                  ),
                 ),
               ),
             ),
